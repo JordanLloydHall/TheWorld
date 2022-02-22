@@ -1,11 +1,45 @@
 [package]
 name = "the_world"
 version = "0.1.0"
+publish = false
+authors = ["Jordan Hall <Jordanhall123@googlemail.com>"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[features]
+default = [
+    "bevy/bevy_winit",
+    "bevy/render",
+    "bevy/png",
+    "bevy/x11",
+    "bevy_kira_audio/ogg",
+    "heron/2d",
+    "heron/debug-2d"
+]
+
+dev = [
+    "bevy/dynamic",
+    
+]
 
 [dependencies]
-bevy = { version = "0.6", features = ["dynamic"] }
-heron = { version = "1.1.0", features = ["2d"] }
-rand = "0.8.4"
+bevy = { version = "0.6", default-features = false }
+bevy_kira_audio = { version = "0.8" }
+bevy_asset_loader = { version = "0.8" }
+rand = { version = "0.8" }
+heron = { version = "2.0" }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+winit = { version = "0.26", features=["x11"]}
+
+[build-dependencies]
+embed-resource = "1.4"

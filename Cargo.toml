@@ -23,12 +23,12 @@ default = [
     "bevy/x11",
     "bevy_kira_audio/ogg",
     "heron/2d",
-    "heron/debug-2d"
+    
 ]
 
 dev = [
     "bevy/dynamic",
-    
+    "heron/debug-2d"
 ]
 
 [dependencies]

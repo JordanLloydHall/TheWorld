@@ -58,8 +58,8 @@ fn spawn_rabbit(
                     transform: Transform::from_translation(
                         transform.translation
                             + Vec3::new(
-                                rand::random::<f32>() * 10.,
-                                rand::random::<f32>() * 10.,
+                                (rand::random::<f32>() - 0.5) * 50.,
+                                (rand::random::<f32>() - 0.5) * 50.,
                                 0.1,
                             ),
                     ),

@@ -20,6 +20,8 @@ use menu::MenuPlugin;
 use player::PlayerPlugin;
 // use territory::TerritoryPlugin;
 
+use physics::AddedObject;
+
 use bevy::app::App;
 #[cfg(debug_assertions)]
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
@@ -53,7 +55,8 @@ impl Plugin for GamePlugin {
             // .add_plugin(TerritoryPlugin)
             .add_plugin(HousePlugin)
             .add_plugin(HumanPlugin)
-            .add_plugin(PhysicsPlugin::default());
+            .add_plugin(PhysicsPlugin::default())
+            .insert_resource(AddedObject(false));
 
         #[cfg(debug_assertions)]
         {

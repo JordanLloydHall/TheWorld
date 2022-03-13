@@ -6,3 +6,5 @@ pub enum Layer {
     Human,
     World,
 }
+
+pub struct AddedObject(pub bool);

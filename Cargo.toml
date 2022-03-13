@@ -34,7 +34,7 @@ dev = [
 [dependencies]
 bevy = { version = "0.6", default-features = false }
 bevy_kira_audio = { version = "0.8" }
-bevy_asset_loader = { version = "0.8" }
+bevy_asset_loader = { version = "0.9" }
 rand = { version = "0.8" }
 heron = { version = "2.0" }
 

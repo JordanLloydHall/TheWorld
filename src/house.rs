@@ -40,25 +40,31 @@ fn spawn_house(mut commands: Commands, textures: Res<TextureAssets>) {
             border_radius: None,
         })
         .with_children(|a| {
-            a.spawn_bundle(SpriteBundle {
-                sprite: Sprite {
-                    color: Color::rgba(0.5, 0.5, 1.0, 0.1),
-                    custom_size: Some(Vec2::new(400., 400.)),
-                    ..Default::default()
-                },
-                ..Default::default()
-            })
-            .insert(Territory)
-            .insert(CollisionShape::Cuboid {
-                half_extends: Vec3::new(200., 200., 0.),
-                border_radius: None,
-            })
-            .insert(
-                CollisionLayers::none()
-                    .with_group(Layer::Territory)
-                    .with_masks(&[Layer::Human]),
-            );
-        });
+            // a.spawn_bundle(SpriteBundle {
+            //     sprite: Sprite {
+            //         color: Color::rgba(0.5, 0.5, 1.0, 0.1),
+            //         custom_size: Some(Vec2::new(400., 400.)),
+            //         ..Default::default()
+            //     },
+            //     ..Default::default()
+            // })
+            // .insert(Territory)
+            // .insert(RigidBody::Sensor)
+            // .insert(CollisionShape::Cuboid {
+            //     half_extends: Vec3::new(200., 200., 0.),
+            //     border_radius: None,
+            // })
+            // .insert(
+            //     CollisionLayers::none()
+            //         .with_group(Layer::Territory)
+            //         .with_masks(&[Layer::Human]),
+            // );
+        })
+        .insert(
+            CollisionLayers::none()
+                .with_group(Layer::World)
+                .with_masks(&[Layer::Human, Layer::World]),
+        );
 
     commands
         .spawn_bundle(SpriteBundle {

@@ -19,6 +19,15 @@ impl Plugin for LoadingPlugin {
     }
 }
 
+// fn configure_background_image(background: Res<TextureAssets>, mut images: ResMut<Assets<Image>>) {
+//     // Doing this in response to AssetEvents seem to be broken, instead we try to set the sampler every frame
+//     let mut image = images.get_mut(background.0.clone());
+//     if let Some(image) = image {
+//         image.sampler_descriptor.address_mode_u = AddressMode::Repeat;
+//         image.sampler_descriptor.address_mode_v = AddressMode::Repeat;
+//     }
+// }
+
 // the following asset collections will be loaded during the State `GameState::Loading`
 // when done loading, they will be inserted as resources (see https://github.com/NiklasEi/bevy_asset_loader)
 
@@ -36,8 +45,12 @@ pub struct AudioAssets {
 
 #[derive(AssetCollection)]
 pub struct TextureAssets {
+    #[asset(texture_atlas(tile_size_x = 16., tile_size_y = 16., columns = 57, rows = 30, padding_x = 1., padding_y = 1.))]
+    #[asset(path = "textures/main_sprite_sheet.png")]
+    pub sprites: Handle<TextureAtlas>,
     #[asset(path = "textures/rabbit.png")]
     pub rabbit: Handle<Image>,
     #[asset(path = "textures/burrow.png")]
     pub burrow: Handle<Image>,
+    
 }

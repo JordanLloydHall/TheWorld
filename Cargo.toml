@@ -23,23 +23,28 @@ default = [
     "bevy/x11",
     "bevy_kira_audio/ogg",
     "heron/2d",
-    
 ]
 
 dev = [
     "bevy/dynamic",
-    "heron/debug-2d"
+    "heron/debug-2d",
+    "colored",
+    "bevy-inspector-egui"
 ]
 
 [dependencies]
 bevy = { version = "0.6", default-features = false }
 bevy_kira_audio = { version = "0.8" }
-bevy_asset_loader = { version = "0.9" }
+bevy_asset_loader = { version = "0.9", features=["render"] }
 rand = { version = "0.8" }
 heron = { version = "2.0" }
+colored = { version = "2.0", optional = true }
+bevy-inspector-egui = { version = "0.8", optional = true }
+ezinput = "0.2"
+ezinput_macros = "0.2"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 winit = { version = "0.26", features=["x11"]}
 
 [build-dependencies]
-embed-resource = "1.4"
+embed-resource = "1.7"

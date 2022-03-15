@@ -1,9 +1,16 @@
 use crate::actions::Actions;
 use crate::loading::TextureAssets;
 use crate::GameState;
+use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
+
+// enum Object {
+
+// }
+
+// const OBJECTS: [] = 
 
 #[derive(Component)]
 pub struct PlayerCamera;
@@ -16,7 +23,9 @@ impl Plugin for PlayerPlugin {
             .add_system_set(
                 SystemSet::on_update(GameState::Playing)
                     .with_system(move_player_camera)
-                    .with_system(scale_player_camera),
+                    .with_system(scale_player_camera)
+                    .with_system(place_object)
+                    // .with_system(update_selected_object),
             );
     }
 }
@@ -27,15 +36,70 @@ fn spawn_camera(mut commands: Commands) {
         .insert(PlayerCamera);
 }
 
-// fn spawn_player(mut commands: Commands, textures: Res<TextureAssets>) {
-//     commands
-//         .spawn_bundle(SpriteBundle {
-//             texture: textures.rabbit.clone(),
-//             transform: Transform::from_translation(Vec3::new(0., 0., 1.)),
-//             ..Default::default()
-//         })
-//         .insert(Player);
+// fn update_selected_object(
+//     item: 
+//     mut scroll_evr: EventReader<MouseWheel>,
+// ) {
+//     use bevy::input::mouse::MouseScrollUnit;
+//     for ev in scroll_evr.iter() {
+//         match ev.unit {
+//             MouseScrollUnit::Line => {
+//                 println!("Scroll (line units): vertical: {}, horizontal: {}", ev.y, ev.x);
+//             }
+//             MouseScrollUnit::Pixel => {
+//                 println!("Scroll (pixel units): vertical: {}, horizontal: {}", ev.y, ev.x);
+//             }
+//         }
+//     }
 // }
+
+fn place_object(
+    mut commands: Commands,
+    // need to get window dimensions
+    wnds: Res<Windows>,
+    // Sprites
+    sprites: Res<TextureAssets>,
+    buttons: Res<Input<MouseButton>>,
+    // query to get camera transform
+    q_camera: Query<(&Camera, &GlobalTransform), With<PlayerCamera>>
+) {
+    // get the camera info and transform
+    // assuming there is exactly one main camera entity, so query::single() is OK
+    let (camera, camera_transform) = q_camera.single();
+
+    // get the window that the camera is displaying to
+    let wnd = wnds.get(camera.window).unwrap();
+
+    // check if the cursor is inside the window and get its position
+    if let Some(screen_pos) = wnd.cursor_position() {
+        // get the size of the window
+        let window_size = Vec2::new(wnd.width() as f32, wnd.height() as f32);
+
+        // convert screen position [0..resolution] to ndc [-1..1] (gpu coordinates)
+        let ndc = (screen_pos / window_size) * 2.0 - Vec2::ONE;
+
+        // matrix for undoing the projection and camera transform
+        let ndc_to_world = camera_transform.compute_matrix() * camera.projection_matrix.inverse();
+
+        // use it to convert ndc to world-space coordinates
+        let world_pos = ndc_to_world.project_point3(ndc.extend(-1.0));
+
+        // reduce it to a 2D value
+        let world_pos = world_pos.truncate();
+
+        if buttons.just_pressed(MouseButton::Left) {
+            commands.spawn_bundle(SpriteSheetBundle {
+                texture_atlas: sprites.sprites.clone(),
+                transform: Transform::from_translation(world_pos.extend(0.)),
+                sprite: TextureAtlasSprite::new(526),
+                ..Default::default()
+            });
+        }
+        
+    }
+
+}
+
 
 fn move_player_camera(
     time: Res<Time>,

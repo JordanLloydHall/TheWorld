@@ -5,10 +5,13 @@ use bevy::prelude::{App, ClearColor, Color, Msaa, WindowDescriptor};
 use bevy::DefaultPlugins;
 use the_world::GamePlugin;
 
+#[cfg(feature = "dev")]
+use bevy_inspector_egui::WorldInspectorPlugin;
+
 fn main() {
-    App::new()
-        .insert_resource(Msaa { samples: 1 })
-        .insert_resource(ClearColor(Color::rgb(0., 0.6, 0.09)))
+    let mut app = App::new();
+        app.insert_resource(Msaa { samples: 1 })
+        .insert_resource(ClearColor(Color::rgb_u8(141, 196, 53)))
         .insert_resource(WindowDescriptor {
             width: 800.,
             height: 600.,
@@ -16,6 +19,12 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-        .add_plugin(GamePlugin)
-        .run();
+        .add_plugin(GamePlugin);
+        
+    
+        #[cfg(feature = "dev")]
+        // Debug hierarchy inspector
+        app.add_plugin(WorldInspectorPlugin::new());
+    
+        app.run();
 }
